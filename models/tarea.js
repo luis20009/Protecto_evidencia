@@ -1,15 +1,31 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 
 const tareaSchema = new mongoose.Schema({
   titulo: { type: String, required: true },
   descripcion: String,
-  fechaLimite: Date,
+  fechaLimite: {
+    type: Date,
+    required: true,
+    validate: {
+      validator: function(v) {
+        return v > new Date();
+      },
+      message: 'La fecha límite debe ser posterior a la fecha actual'
+    }
+  },
   completada: { type: Boolean, default: false },
-  respuesta: { type: String, default: "" }, // campo editable por el estudiante
-  creador: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  respuesta: { type: String, default: "" },
+  creador: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  nombreCreador: String,  // Añadimos el nombre del creador
+  userInfo: {
+    username: String,
+    name: String,
+    Rol: String
+  }
 })
-
-
 
 tareaSchema.set('toJSON', {
   transform: (doc, ret) => {
@@ -19,4 +35,4 @@ tareaSchema.set('toJSON', {
   }
 })
 
-export default mongoose.model('Tarea', tareaSchema)
+module.exports = mongoose.model('Tarea', tareaSchema)

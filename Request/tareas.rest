@@ -1,0 +1,18 @@
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "Venecia",
+    "password": "12345678910"
+}
+
+### Crear tarea con información del usuario
+POST http://localhost:3003/api/tareas
+Content-Type: application/json
+Authorization: Bearer AQUÍ_VA_EL_TOKEN
+
+{
+    "titulo": "Primera tarea",
+    "descripcion": "Esta es una tarea de prueba",
+    "fechaLimite": "2024-08-20"
+}

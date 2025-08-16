@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/tareas
+Content-Type: application/json
+
+{
+    "titulo": "Primera tarea",
+    "descripcion": "Esta es una tarea de prueba",
+    "fechaLimite": "2024-08-20",
+    "creador": "ID_DEL_USUARIO"
+}

@@ -50,25 +50,24 @@ const tokenExtractor = (request, response, next) => {
 
 const userExtractor = async (request, response, next) => {
   try {
-    const token = request.token
-
-    if (!token) {
-      return response.status(401).json({ error: 'token missing' })
-    }
-
-    const decodedToken = jwt.verify(token, process.env.SECRET)
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
     if (!decodedToken.id) {
-      return response.status(401).json({ error: 'token invalid' })
+      return response.status(401).json({ error: 'token missing or invalid' })
     }
 
     const user = await User.findById(decodedToken.id)
     if (!user) {
-      return response.status(401).json({ error: 'user not found' })
+      return response.status(401).json({ error: 'token missing or invalid' })
     }
 
-    request.user = user
-    next()
+    request.user = {
+      id: user._id,
+      username: user.username,
+      name: user.name,
+      Rol: user.Rol
+    }
 
+    next()
   } catch (error) {
     next(error)
   }

@@ -31,4 +31,16 @@ usersRouter.get('/', async (request, response) => {
   response.json(users)
 })
 
+// Nuevo endpoint para obtener usuarios maker
+usersRouter.get('/makers', async (request, response) => {
+  try {
+    const makers = await User.find({ Rol: 'maker' })
+      .select('id username name Rol')
+    
+    response.json(makers)
+  } catch (error) {
+    response.status(500).json({ error: 'Error al obtener makers' })
+  }
+})
+
 module.exports = usersRouter
