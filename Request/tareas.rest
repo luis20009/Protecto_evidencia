@@ -6,13 +6,49 @@ Content-Type: application/json
     "password": "12345678910"
 }
 
-### Crear tarea con información del usuario
+### Crear tarea con preguntas y opciones
 POST http://localhost:3003/api/tareas
 Content-Type: application/json
-Authorization: Bearer AQUÍ_VA_EL_TOKEN
+Authorization: Bearer eyJhbGciOiJIUzI1... // Pegar aquí el token del login
 
 {
-    "titulo": "Primera tarea",
-    "descripcion": "Esta es una tarea de prueba",
-    "fechaLimite": "2024-08-20"
+    "titulo": "Cuestionario de Matemáticas",
+    "descripcion": "Examen básico de matemáticas",
+    "fechaLimite": "2024-08-23",
+    "preguntas": [
+        {
+            "pregunta": "¿Cuánto es 2 + 2?",
+            "opciones": [
+                {
+                    "texto": "3",
+                    "esCorrecta": false
+                },
+                {
+                    "texto": "4",
+                    "esCorrecta": true
+                },
+                {
+                    "texto": "5",
+                    "esCorrecta": false
+                }
+            ]
+        },
+        {
+            "pregunta": "¿Cuánto es 5 x 5?",
+            "opciones": [
+                {
+                    "texto": "15",
+                    "esCorrecta": false
+                },
+                {
+                    "texto": "25",
+                    "esCorrecta": true
+                },
+                {
+                    "texto": "35",
+                    "esCorrecta": false
+                }
+            ]
+        }
+    ]
 }

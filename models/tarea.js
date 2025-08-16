@@ -1,5 +1,31 @@
 const mongoose = require('mongoose')
 
+const preguntaSchema = new mongoose.Schema({
+  pregunta: { 
+    type: String, 
+    required: [true, 'La pregunta es obligatoria']
+  },
+  opciones: [{
+    texto: { 
+      type: String, 
+      required: [true, 'El texto de la opción es obligatorio']
+    },
+    esCorrecta: { 
+      type: Boolean, 
+      required: [true, 'Debe indicar si la opción es correcta']
+    }
+  }],
+  respuestaSeleccionada: {
+    type: Number,
+    default: -1
+  }
+})
+
+// Validación para asegurar que hay al menos una opción
+preguntaSchema.path('opciones').validate(function(opciones) {
+  return opciones.length > 0;
+}, 'Debe proporcionar al menos una opción');
+
 const tareaSchema = new mongoose.Schema({
   titulo: { type: String, required: true },
   descripcion: String,
@@ -14,12 +40,12 @@ const tareaSchema = new mongoose.Schema({
     }
   },
   completada: { type: Boolean, default: false },
-  respuesta: { type: String, default: "" },
+  preguntas: [preguntaSchema],
   creador: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  nombreCreador: String,  // Añadimos el nombre del creador
+  nombreCreador: String,
   userInfo: {
     username: String,
     name: String,
