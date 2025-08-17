@@ -15,10 +15,18 @@ const preguntaSchema = new mongoose.Schema({
       required: [true, 'Debe indicar si la opción es correcta']
     }
   }],
-  respuestaSeleccionada: {
+  respuestas:[ {
+    usuarioId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    seleccion:{
     type: Number,
-    default: -1
+    required: true
   }
+}
+]
 })
 
 // Validación para asegurar que hay al menos una opción
@@ -50,7 +58,12 @@ const tareaSchema = new mongoose.Schema({
     username: String,
     name: String,
     Rol: String
-  }
+  },
+  usuariosCompletaron: [{
+  type: mongoose.Schema.Types.ObjectId,
+  ref: 'User'
+}]
+
 })
 
 tareaSchema.set('toJSON', {
@@ -60,5 +73,6 @@ tareaSchema.set('toJSON', {
     delete ret.__v
   }
 })
+
 
 module.exports = mongoose.model('Tarea', tareaSchema)

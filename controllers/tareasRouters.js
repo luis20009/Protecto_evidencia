@@ -27,6 +27,18 @@ tareasRouter.get('/mis-tareas', userExtractor, async (req, res) => {
   }
 })
 
+// Añadir este nuevo endpoint GET
+tareasRouter.get('/', async (req, res) => {
+  try {
+    const tareas = await Tarea.find({})
+      .populate('creador', { username: 1, name: 1, Rol: 1 })
+    res.json(tareas)
+  } catch (error) {
+    console.error('Error al obtener tareas:', error)
+    res.status(500).json({ error: 'Error al obtener las tareas' })
+  }
+})
+
 // POST para crear tarea con preguntas
 tareasRouter.post('/', userExtractor, async (req, res) => {
   try {
@@ -74,7 +86,7 @@ tareasRouter.post('/', userExtractor, async (req, res) => {
       preguntas: preguntas.map(p => ({
         pregunta: p.pregunta,
         opciones: p.opciones,
-        respuestaSeleccionada: -1
+        respuestas: []
       })),
       creador: user.id,
       nombreCreador: user.name,
@@ -121,7 +133,17 @@ tareasRouter.post('/:id/responder', userExtractor, async (req, res) => {
     }
 
     // Actualizar solo la respuesta de la pregunta específica
-    tarea.preguntas[preguntaIndex].respuestaSeleccionada = respuestaIndex
+    const respuestas = pregunta.respuestas || []
+
+const yaRespondio = respuestas.find(r => r.usuarioId.toString() === user.id.toString())
+
+if (yaRespondio) {
+  yaRespondio.seleccion = respuestaIndex
+} else {
+  respuestas.push({ usuarioId: user.id, seleccion: respuestaIndex })
+}
+
+pregunta.respuestas = respuestas
 
     // Verificar si todas las preguntas han sido respondidas
     const todasRespondidas = tarea.preguntas.every(p => p.respuestaSeleccionada !== -1)
